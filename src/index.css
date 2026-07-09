@@ -1,0 +1,50 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  /* Neumorphic Shadows */
+  --shadow-neu-flat: 8px 8px 16px #c5cbd5, -8px -8px 16px #ffffff;
+  --shadow-neu-flat-sm: 4px 4px 8px #c5cbd5, -4px -4px 8px #ffffff;
+  --shadow-neu-flat-lg: 12px 12px 24px #c5cbd5, -12px -12px 24px #ffffff;
+  --shadow-neu-pressed: inset 6px 6px 12px #c5cbd5, inset -6px -6px 12px #ffffff;
+  --shadow-neu-pressed-sm: inset 3px 3px 6px #c5cbd5, inset -3px -3px 6px #ffffff;
+
+  /* Colors */
+  --color-neu-bg: #eef2f7;
+  --color-neu-dark: #1e222b;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-neu-bg);
+  color: #2e384d;
+  background-attachment: fixed;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-neu-bg);
+  box-shadow: inset 1px 1px 3px #c5cbd5, inset -1px -1px 3px #ffffff;
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 8px;
+  border: 2px solid var(--color-neu-bg);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Highlight style */
+::selection {
+  background-color: rgba(236, 72, 153, 0.2);
+  color: #be185d;
+}

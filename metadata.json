@@ -1,0 +1,6 @@
+{
+  "name": "Salvador de Links para Posts",
+  "description": "Um webapp simples para salvar links de ideias de posts em tempo real, com visualização rica e geração de roteiros e ideias de postagem usando IA.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,60 @@
+{
+  "entities": {
+    "PostIdeaLink": {
+      "title": "PostIdeaLink",
+      "description": "Saved links of ideas for posts including metadata previews and notes.",
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "description": "The URL of the saved page"
+        },
+        "title": {
+          "type": "string",
+          "description": "The title of the page or user custom title"
+        },
+        "description": {
+          "type": "string",
+          "description": "A short summary or meta description"
+        },
+        "image": {
+          "type": "string",
+          "description": "URL of the preview image"
+        },
+        "siteName": {
+          "type": "string",
+          "description": "Name of the source website"
+        },
+        "notes": {
+          "type": "string",
+          "description": "User notes or ideas about this post link"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["pending", "drafted", "published"],
+          "description": "Status of the post idea"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp of creation"
+        },
+        "tags": {
+          "type": "array",
+          "description": "Tags/categories for organizing the ideas"
+        },
+        "aiSummary": {
+          "type": "string",
+          "description": "AI-generated post ideas or summary of the link"
+        }
+      },
+      "required": ["url", "title", "createdAt", "status"]
+    }
+  },
+  "firestore": {
+    "/post_ideas/{ideaId}": {
+      "schema": "PostIdeaLink",
+      "description": "Collection of saved links for post ideas"
+    }
+  }
+}
