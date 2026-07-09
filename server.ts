@@ -11,6 +11,53 @@ async function startServer() {
   // Middlewares
   app.use(express.json());
 
+  // Helper to resolve Instagram links
+  async function resolveInstagramMetadata(urlString: string) {
+    const isInstagram = /instagram\.com/i.test(urlString);
+    if (!isInstagram) return null;
+
+    try {
+      const cleanUrl = urlString.split("?")[0].split("#")[0].replace(/\/+$/, "");
+      const urlObj = new URL(cleanUrl);
+      const pathParts = urlObj.pathname.split("/").filter(Boolean);
+      
+      let title = "Publicação no Instagram";
+      let description = "Link do Instagram salvo para inspiração de conteúdo.";
+      let image = "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=800&auto=format&fit=crop&q=80";
+      
+      if (pathParts.length > 0) {
+        if (pathParts[0] === "p" || pathParts[0] === "reel" || pathParts[0] === "reels" || pathParts[0] === "tv") {
+          const code = pathParts[1];
+          title = pathParts[0] === "reel" || pathParts[0] === "reels" ? "Reel do Instagram" : "Post do Instagram";
+          if (code) {
+            image = `https://images.weserv.nl/?url=www.instagram.com/p/${code}/media/?size=l`;
+          }
+        } else {
+          const username = pathParts[0];
+          title = `@${username} no Instagram`;
+          description = `Perfil de @${username} no Instagram para inspiração de postagens.`;
+        }
+      }
+
+      return {
+        title,
+        description,
+        image,
+        siteName: "Instagram",
+        url: urlString
+      };
+    } catch (err) {
+      console.error("Error parsing Instagram URL:", err);
+      return {
+        title: "Instagram Link",
+        description: "Link do Instagram salvo para inspiração.",
+        image: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=800&auto=format&fit=crop&q=80",
+        siteName: "Instagram",
+        url: urlString
+      };
+    }
+  }
+
   // Helper to resolve Designi links (both short and standard item links)
   async function resolveDesigniMetadata(urlString: string) {
     const isDesigni = /designi\.com\.br/i.test(urlString);
@@ -157,6 +204,13 @@ async function startServer() {
       const designiMeta = await resolveDesigniMetadata(urlString);
       if (designiMeta) {
         res.json(designiMeta);
+        return;
+      }
+
+      // 1.5 Try Instagram-specific resolver
+      const instagramMeta = await resolveInstagramMetadata(urlString);
+      if (instagramMeta) {
+        res.json(instagramMeta);
         return;
       }
 

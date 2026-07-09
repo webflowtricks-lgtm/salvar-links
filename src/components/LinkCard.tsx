@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, Calendar, Trash2, Edit3, Check, Loader2, Sparkles, MessageSquare, Tag, Plus, X, Globe, Eye, FileText, CheckCircle2, AlertCircle } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { PostIdea } from "../types";
@@ -20,6 +20,50 @@ export default function LinkCard({ idea, onUpdate, onDelete, onOpenAiIdeas }: Li
   const [isSavingNotes, setIsSavingNotes] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [aiError, setAiError] = useState<string | null>(null);
+
+  const [isEditingTitle, setIsEditingTitle] = useState(false);
+  const [titleDraft, setTitleDraft] = useState(idea.title);
+  const [isSavingTitle, setIsSavingTitle] = useState(false);
+
+  const handleUpdateTitle = async () => {
+    if (!titleDraft.trim()) return;
+    setIsSavingTitle(true);
+    try {
+      await onUpdate(idea.id, { title: titleDraft.trim() });
+      setIsEditingTitle(false);
+    } catch (err) {
+      console.error("Erro ao salvar título:", err);
+    } finally {
+      setIsSavingTitle(false);
+    }
+  };
+
+  useEffect(() => {
+    setTitleDraft(idea.title);
+  }, [idea.title]);
+
+  useEffect(() => {
+    setNotesDraft(idea.notes || "");
+  }, [idea.notes]);
+
+  const isInstagram = /instagram\.com/i.test(idea.url);
+  let instagramCode = "";
+  if (isInstagram) {
+    try {
+      const cleanUrl = idea.url.split("?")[0].split("#")[0].replace(/\/+$/, "");
+      const urlObj = new URL(cleanUrl);
+      const pathParts = urlObj.pathname.split("/").filter(Boolean);
+      if (pathParts.length > 0) {
+        if (pathParts[0] === "p" || pathParts[0] === "reel" || pathParts[0] === "reels" || pathParts[0] === "tv") {
+          instagramCode = pathParts[1];
+        } else {
+          instagramCode = pathParts[0];
+        }
+      }
+    } catch (e) {
+      console.error("Error parsing Instagram URL:", e);
+    }
+  }
 
   const formattedDate = new Date(idea.createdAt).toLocaleDateString("pt-BR", {
     day: "2-digit",
@@ -116,8 +160,23 @@ export default function LinkCard({ idea, onUpdate, onDelete, onOpenAiIdeas }: Li
       className="bg-neu-bg rounded-3xl shadow-neu-flat border border-white/60 hover:shadow-neu-flat-lg transition-all duration-300 overflow-hidden flex flex-col h-full"
     >
       {/* Link Header Preview Image */}
-      <div className="relative aspect-[16/10] w-full bg-neu-bg flex-shrink-0 group overflow-hidden border-b border-white/30">
-        {idea.image ? (
+      <div className={`relative w-full bg-neu-bg flex-shrink-0 group overflow-hidden border-b border-white/30 ${isInstagram && instagramCode ? "aspect-square" : "aspect-[16/10]"}`}>
+        {isInstagram && instagramCode ? (
+          <div className="absolute inset-0 overflow-hidden">
+            <iframe
+              src={`https://www.instagram.com/p/${instagramCode}/embed/`}
+              className="absolute left-0 w-full border-0"
+              style={{
+                top: "-54px",
+                height: "calc(100% + 54px)",
+              }}
+              scrolling="no"
+              allowTransparency={true}
+              allow="encrypted-media"
+              title={idea.title}
+            />
+          </div>
+        ) : idea.image ? (
           <img
             src={idea.image}
             alt={idea.title}
@@ -139,8 +198,17 @@ export default function LinkCard({ idea, onUpdate, onDelete, onOpenAiIdeas }: Li
         {/* Floating Badges */}
         <div className="absolute top-4 left-4 flex flex-wrap gap-1.5 z-10">
           <span className="flex items-center gap-1.5 text-[10px] font-black tracking-widest uppercase px-3.5 py-1.5 rounded-full bg-neu-bg/90 backdrop-blur shadow-neu-flat-sm text-slate-600 border border-white/40">
-            <Globe className="w-3.5 h-3.5 text-[#ec4899]" />
-            {idea.siteName || "Webpage"}
+            {isInstagram ? (
+              <>
+                <span className="w-2.5 h-2.5 rounded-full bg-gradient-to-tr from-pink-500 via-red-500 to-yellow-500" />
+                Instagram
+              </>
+            ) : (
+              <>
+                <Globe className="w-3.5 h-3.5 text-[#ec4899]" />
+                {idea.siteName || "Webpage"}
+              </>
+            )}
           </span>
         </div>
 
@@ -212,16 +280,61 @@ export default function LinkCard({ idea, onUpdate, onDelete, onOpenAiIdeas }: Li
       <div className="p-6 flex-grow flex flex-col justify-between space-y-5">
         {/* URL Meta Information */}
         <div className="space-y-2.5">
-          <a
-            href={idea.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group/title block focus:outline-none"
-          >
-            <h3 className="font-extrabold text-slate-800 group-hover/title:text-[#ec4899] transition-colors line-clamp-2 leading-snug text-base">
-              {idea.title}
-            </h3>
-          </a>
+          {isEditingTitle ? (
+            <div className="flex items-center gap-2">
+              <input
+                type="text"
+                value={titleDraft}
+                onChange={(e) => setTitleDraft(e.target.value)}
+                className="flex-grow text-xs font-extrabold text-slate-800 bg-neu-bg shadow-neu-pressed rounded-xl px-3 py-2 border-0 focus:outline-none focus:ring-1 focus:ring-pink-500 font-sans"
+                disabled={isSavingTitle}
+                autoFocus
+              />
+              <button
+                onClick={handleUpdateTitle}
+                disabled={isSavingTitle}
+                className="p-1.5 rounded-xl bg-neu-bg shadow-neu-flat text-emerald-600 hover:text-emerald-700 active:scale-95 transition-all flex-shrink-0 border border-white/40"
+                title="Salvar título"
+              >
+                {isSavingTitle ? (
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                ) : (
+                  <Check className="w-3.5 h-3.5" />
+                )}
+              </button>
+              <button
+                onClick={() => {
+                  setTitleDraft(idea.title);
+                  setIsEditingTitle(false);
+                }}
+                disabled={isSavingTitle}
+                className="p-1.5 rounded-xl bg-neu-bg shadow-neu-flat text-slate-400 hover:text-slate-600 active:scale-95 transition-all flex-shrink-0 border border-white/40"
+                title="Cancelar"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          ) : (
+            <div className="flex items-start justify-between gap-2 group/title-container">
+              <a
+                href={idea.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group/title block focus:outline-none flex-grow"
+              >
+                <h3 className="font-extrabold text-slate-800 group-hover/title:text-[#ec4899] transition-colors line-clamp-2 leading-snug text-base">
+                  {idea.title}
+                </h3>
+              </a>
+              <button
+                onClick={() => setIsEditingTitle(true)}
+                className="p-1.5 rounded-xl bg-neu-bg shadow-neu-flat hover:shadow-neu-pressed text-slate-400 hover:text-[#ec4899] transition-all flex-shrink-0 border border-white/40"
+                title="Editar título"
+              >
+                <Edit3 className="w-3 h-3" />
+              </button>
+            </div>
+          )}
           {idea.description && (
             <p className="text-xs text-slate-500 font-medium line-clamp-2 leading-relaxed">
               {idea.description}
