@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { collection, onSnapshot, query, orderBy, doc, addDoc, updateDoc, deleteDoc } from "firebase/firestore";
-import { Sparkles, Library, Filter, Search, Grid, List, Plus, LayoutGrid, CheckCircle2, FileText, Eye, RefreshCw, Bookmark, HelpCircle } from "lucide-react";
+import { Sparkles, Library, Filter, Search, Grid, List, Plus, LayoutGrid, CheckCircle2, FileText, Eye, RefreshCw } from "lucide-react";
 import { db, testConnection } from "./firebase";
 import { PostIdea } from "./types";
 import UrlInputForm from "./components/UrlInputForm";
@@ -148,45 +148,6 @@ export default function App() {
   return (
     <div className="min-h-screen bg-neu-bg flex flex-col pb-16 selection:bg-pink-100 selection:text-pink-900">
       
-      {/* Top Header Bar */}
-      <header className="sticky top-0 z-30 bg-neu-bg/90 backdrop-blur-md px-4 md:px-8 py-4 border-b border-white/40">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            {/* Logo with Neumorphic extrusion and gradient icon */}
-            <div className="w-12 h-12 rounded-2xl bg-neu-bg shadow-neu-flat flex items-center justify-center p-[3px] border border-white/50">
-              <div className="w-full h-full rounded-[13px] bg-gradient-to-tr from-[#ec4899] via-[#ef4444] to-[#f97316] flex items-center justify-center text-white shadow-inner">
-                <Bookmark className="w-5.5 h-5.5" />
-              </div>
-            </div>
-            <div>
-              <h1 className="text-lg md:text-xl font-extrabold tracking-tight text-slate-800 flex items-center gap-2">
-                IdeiasPost
-                {/* Neumorphic Inset Channel for live status */}
-                <span className="text-[10px] bg-neu-bg shadow-neu-pressed font-mono font-bold px-3 py-1 rounded-full text-slate-600 flex items-center gap-1.5 border border-white/30">
-                  <span className="w-2 h-2 rounded-full bg-gradient-to-r from-emerald-400 to-teal-500 animate-pulse shadow-md shadow-emerald-400/50"></span>
-                  Tempo Real
-                </span>
-              </h1>
-              <p className="text-xs text-slate-400 hidden sm:block font-medium mt-0.5">
-                Colete referências e crie roteiros estruturados de postagens instantaneamente
-              </p>
-            </div>
-          </div>
-          
-          <div className="flex items-center gap-3">
-            <a
-              href="https://github.com"
-              target="_blank"
-              rel="noreferrer"
-              className="px-4 py-2.5 bg-neu-bg shadow-neu-flat hover:shadow-neu-pressed active:shadow-neu-pressed rounded-full text-slate-500 hover:text-slate-800 transition-all text-xs font-semibold flex items-center gap-2 border border-white/60"
-            >
-              <HelpCircle className="w-4 h-4 text-[#ef4444]" />
-              <span>Como funciona?</span>
-            </a>
-          </div>
-        </div>
-      </header>
-
       {/* Main Container */}
       <main className="flex-grow max-w-7xl mx-auto w-full px-4 md:px-8 pt-8 space-y-10">
         
@@ -226,50 +187,6 @@ export default function App() {
                 placeholder="Buscar por palavras-chave ou anotações..."
                 className="w-full pl-11 pr-4 py-3 bg-neu-bg shadow-neu-pressed border-0 rounded-2xl text-slate-800 placeholder-slate-400 text-xs focus:outline-none transition-all"
               />
-            </div>
-
-            {/* Status Selector - Neumorphic tab switcher channel */}
-            <div className="flex items-center gap-1.5 bg-neu-bg shadow-neu-pressed p-1.5 rounded-2xl border border-white/30">
-              <button
-                onClick={() => setStatusFilter("all")}
-                className={`px-4 py-2 text-xs font-bold rounded-xl transition-all ${
-                  statusFilter === "all"
-                    ? "bg-neu-bg shadow-neu-flat text-transparent bg-clip-text bg-gradient-to-r from-[#ec4899] to-[#f97316]"
-                    : "text-slate-500 hover:text-slate-700"
-                }`}
-              >
-                Todas
-              </button>
-              <button
-                onClick={() => setStatusFilter("pending")}
-                className={`px-4 py-2 text-xs font-bold rounded-xl transition-all ${
-                  statusFilter === "pending"
-                    ? "bg-neu-bg shadow-neu-flat text-transparent bg-clip-text bg-gradient-to-r from-[#ec4899] to-[#f97316]"
-                    : "text-slate-500 hover:text-slate-700"
-                }`}
-              >
-                Novas
-              </button>
-              <button
-                onClick={() => setStatusFilter("drafted")}
-                className={`px-4 py-2 text-xs font-bold rounded-xl transition-all ${
-                  statusFilter === "drafted"
-                    ? "bg-neu-bg shadow-neu-flat text-transparent bg-clip-text bg-gradient-to-r from-[#ec4899] to-[#f97316]"
-                    : "text-slate-500 hover:text-slate-700"
-                }`}
-              >
-                Roteiros
-              </button>
-              <button
-                onClick={() => setStatusFilter("published")}
-                className={`px-4 py-2 text-xs font-bold rounded-xl transition-all ${
-                  statusFilter === "published"
-                    ? "bg-neu-bg shadow-neu-flat text-transparent bg-clip-text bg-gradient-to-r from-[#ec4899] to-[#f97316]"
-                    : "text-slate-500 hover:text-slate-700"
-                }`}
-              >
-                Prontas
-              </button>
             </div>
           </div>
 
