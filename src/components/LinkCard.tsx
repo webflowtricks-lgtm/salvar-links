@@ -227,53 +227,10 @@ export default function LinkCard({ idea, onUpdate, onDelete, onOpenAiIdeas }: Li
               {idea.description}
             </p>
           )}
-          <div className="flex items-center text-[10px] text-slate-400 font-bold gap-1.5 mt-1 tracking-wider uppercase">
-            <Calendar className="w-3.5 h-3.5 text-slate-400" />
-            Salvo em {formattedDate}
-          </div>
+         
         </div>
 
-        {/* Status Pills with Neumorphic sliding channel style */}
-        <div className="space-y-2">
-          <span className="text-[10px] font-black text-[#ec4899] tracking-wider uppercase block pl-1">
-            Status da Ideia
-          </span>
-          <div className="grid grid-cols-3 gap-1 bg-neu-bg shadow-neu-pressed p-1 rounded-2xl border border-white/30">
-            <button
-              onClick={() => handleStatusChange("pending")}
-              className={`py-2 px-1 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 ${
-                idea.status === "pending"
-                  ? "bg-neu-bg shadow-neu-flat text-amber-600 border border-white/50"
-                  : "text-slate-500 hover:text-slate-700"
-              }`}
-            >
-              <Eye className="w-3.5 h-3.5 flex-shrink-0" />
-              <span className="truncate">Nova</span>
-            </button>
-            <button
-              onClick={() => handleStatusChange("drafted")}
-              className={`py-2 px-1 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 ${
-                idea.status === "drafted"
-                  ? "bg-neu-bg shadow-neu-flat text-[#ec4899] border border-white/50"
-                  : "text-slate-500 hover:text-slate-700"
-              }`}
-            >
-              <FileText className="w-3.5 h-3.5 flex-shrink-0" />
-              <span className="truncate">Roteiro</span>
-            </button>
-            <button
-              onClick={() => handleStatusChange("published")}
-              className={`py-2 px-1 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-1.5 ${
-                idea.status === "published"
-                  ? "bg-neu-bg shadow-neu-flat text-emerald-600 border border-white/50"
-                  : "text-slate-500 hover:text-slate-700"
-              }`}
-            >
-              <CheckCircle2 className="w-3.5 h-3.5 flex-shrink-0" />
-              <span className="truncate">Pronto</span>
-            </button>
-          </div>
-        </div>
+        
 
         {/* User Notes Block with Deep Neumorphic slot */}
         <div className="space-y-2 bg-neu-bg shadow-neu-pressed rounded-2xl p-4 border border-white/20">
@@ -366,43 +323,7 @@ export default function LinkCard({ idea, onUpdate, onDelete, onOpenAiIdeas }: Li
             </form>
           </div>
         </div>
-
-        {/* Action Button: AI Ideas Generation */}
-        <div className="pt-2 space-y-2">
-          {aiError && (
-            <div className="flex items-center gap-1.5 text-rose-500 bg-neu-bg shadow-neu-pressed px-3 py-2 rounded-xl text-[10.5px] border border-rose-100 font-bold">
-              <AlertCircle className="w-3.5 h-3.5 flex-shrink-0 text-rose-500" />
-              <span className="truncate">{aiError}</span>
-            </div>
-          )}
-          {idea.aiSummary ? (
-            <button
-              onClick={() => onOpenAiIdeas(idea.title, idea.url, idea.aiSummary!)}
-              className="w-full py-3 px-4 bg-neu-bg shadow-neu-flat hover:shadow-neu-pressed active:scale-[0.98] text-transparent bg-clip-text bg-gradient-to-r from-[#ec4899] to-[#f97316] rounded-2xl text-xs font-black flex items-center justify-center gap-2 transition-all border border-white/60"
-            >
-              <Sparkles className="w-4 h-4 text-[#ec4899]" />
-              Ver Ideias Criadas pela IA
-            </button>
-          ) : (
-            <button
-              onClick={handleGenerateAiIdeas}
-              disabled={isGenerating}
-              className="w-full py-3 px-4 bg-gradient-to-r from-[#ec4899] via-[#ef4444] to-[#f97316] hover:brightness-105 active:scale-[0.98] text-white rounded-2xl text-xs font-extrabold flex items-center justify-center gap-2 transition-all shadow-[0_4px_14px_rgba(236,72,153,0.3)] disabled:opacity-80 disabled:cursor-not-allowed cursor-pointer"
-            >
-              {isGenerating ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  Gerando roteiro com IA...
-                </>
-              ) : (
-                <>
-                  <Sparkles className="w-4 h-4 text-white animate-pulse" />
-                  Criar Ideias de Posts (IA)
-                </>
-              )}
-            </button>
-          )}
-        </div>
+ 
       </div>
     </motion.div>
   );
